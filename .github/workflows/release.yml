@@ -1,0 +1,37 @@
+name: Build Wordpress Plugin
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Downloadable Wordpress Plugin
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # This ensures that the full Git history is checked out, not just the latest commit
+
+      - name: Create a release with a custom name
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          RELEASE_NAME="Release $TAG_NAME"
+          gh release create $TAG_NAME --title "$RELEASE_NAME" --notes ""  --generate-notes
+
+      - name: Create Wordpress Plugin File
+        run: zip -r HTMLBerg-Blocks.zip ./* -x ".git/*" ".github/*" ".gitignore" "package.json" "package-lock.json" "node_modules/*" "src/*"
+      
+      - name: Upload asset to release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          gh release upload $TAG_NAME HTMLBerg-Blocks.zip
