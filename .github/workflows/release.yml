@@ -26,8 +26,16 @@ jobs:
           RELEASE_NAME="Release $TAG_NAME"
           gh release create $TAG_NAME --title "$RELEASE_NAME" --notes ""  --generate-notes
 
+      - name: Create Wordpress Plugin Directory
+        run: mkdir HTMLBerg-Blocks
+
+      - name: Move files to Plugin Directory
+        run: |
+          shopt -s extglob
+          mv !(HTMLBerg-Blocks|.git|.github|.gitignore|package.json|package-lock.json|node_modules|src) HTMLBerg-Blocks/
+
       - name: Create Wordpress Plugin File
-        run: zip -r HTMLBerg-Blocks.zip ./* -x ".git/*" ".github/*" ".gitignore" "package.json" "package-lock.json" "node_modules/*" "src/*"
+        run: zip -r HTMLBerg-Blocks.zip HTMLBerg-Blocks -x "HTMLBerg-Blocks/.git/*" "HTMLBerg-Blocks/.github/*" "HTMLBerg-Blocks/.gitignore" "HTMLBerg-Blocks/package.json" "HTMLBerg-Blocks/package-lock.json" "HTMLBerg-Blocks/node_modules/*" "HTMLBerg-Blocks/src/*"
       
       - name: Upload asset to release
         env:
