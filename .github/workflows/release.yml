@@ -1,22 +1,31 @@
-name: Build Wordpress Plugin
+name: Build WordPress Plugin
 
 on:
   push:
     tags:
-    - 'v*'
+      - 'v*'
 
 permissions:
   contents: write
 
 jobs:
   release:
-    name: Create Downloadable Wordpress Plugin
+    name: Create Downloadable WordPress Plugin
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # This ensures that the full Git history is checked out, not just the latest commit
+          fetch-depth: 0  # Ensures the full Git history is checked out
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'  # Specify the Node.js version your project requires
+          cache: 'npm'        # Cache npm dependencies for faster builds
+
+      - name: Install Dependencies
+        run: npm install      # Install npm dependencies
 
       - name: Create a release with a custom name
         env:
@@ -24,22 +33,27 @@ jobs:
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           RELEASE_NAME="Release $TAG_NAME"
-          gh release create $TAG_NAME --title "$RELEASE_NAME" --notes ""  --generate-notes
+          gh release create $TAG_NAME --title "$RELEASE_NAME" --notes "" --generate-notes
 
-      - name: Create Wordpress Plugin Directory
-        run: mkdir HTMLBerg-Blocks
+      - name: Create WordPress Plugin Directory
+        run: mkdir -p HTMLBerg-Blocks
 
       - name: Move files to Plugin Directory
         run: |
           shopt -s extglob
           mv !(HTMLBerg-Blocks|.git|.github|.gitignore|package.json|package-lock.json|node_modules|src) HTMLBerg-Blocks/
 
-      - name: Create Wordpress Plugin File
+      - name: Create WordPress Plugin Zip File
         run: zip -r HTMLBerg-Blocks.zip HTMLBerg-Blocks -x "HTMLBerg-Blocks/.git/*" "HTMLBerg-Blocks/.github/*" "HTMLBerg-Blocks/.gitignore" "HTMLBerg-Blocks/package.json" "HTMLBerg-Blocks/package-lock.json" "HTMLBerg-Blocks/node_modules/*" "HTMLBerg-Blocks/src/*"
-      
+
       - name: Upload asset to release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           gh release upload $TAG_NAME HTMLBerg-Blocks.zip
+
+      - name: Cleanup Artifacts
+        run: |
+          rm -rf HTMLBerg-Blocks      # Remove the plugin directory
+          rm HTMLBerg-Blocks.zip       # Remove the zip file
