@@ -36,6 +36,7 @@ const Edit = ({ attributes, setAttributes }) => {
                         }))}
                         onChange={(value) => setAttributes({ tag: value, attributes: {} })}
                     />
+                    
                     {/* Show attribute fields dynamically */}
                     {tagAttributes[tag] &&
                         tagAttributes[tag].map((attr) => (
@@ -56,7 +57,7 @@ const Edit = ({ attributes, setAttributes }) => {
                     />
                 </PanelBody>
             </InspectorControls>
-            
+
             {/** Render the selected HTML tag dynamically */}
             {React.createElement(
                 tag,
