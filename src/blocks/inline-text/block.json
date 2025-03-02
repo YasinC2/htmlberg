@@ -1,8 +1,9 @@
 {
-  "name": "mgb/inline-text-tag",
-  "title": "Inline Text Tag",
-  "category": "mgb-blocks",
+  "name": "hbb/inline-text-tag",
+  "title": "Inline Text",
+  "category": "hbb-blocks",
   "icon": "editor-textcolor",
+  "description": "Inline text HTML tags like span, strong, i, etc.",
   "attributes": {
     "tag": {
       "type": "string",
@@ -40,6 +41,7 @@
     "typography": {
       "fontSize": true,
       "lineHeight": true,
+      "textAlign": true,
       "__experimentalFontFamily": true,
       "__experimentalFontWeight": true,
       "__experimentalFontStyle": true,

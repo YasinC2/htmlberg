@@ -1,31 +1,39 @@
-import { useBlockProps, RichText } from "@wordpress/block-editor";
+import { useBlockProps, RichText, InnerBlocks } from '@wordpress/block-editor';
 
-const Save = ({ attributes }) => {
-    const { tag, predefinedAttributes, customAttributes, content, style = {} } = attributes;
+export default function Save({ attributes }) {
+    const { tag, content, predefinedAttributes, customAttributes, enableInnerBlocks } = attributes;
+
+    // Convert customAttributes string into an object
+    const parseCustomAttributes = (customAttrString) => {
+        const attributes = {};
+        customAttrString.split(',').forEach((attr) => {
+            const [key, value] = attr.split('=');
+            if (key && value) {
+                attributes[key.trim()] = value.trim().replace(/^"|"$/g, ''); // Remove surrounding quotes
+            }
+        });
+        return attributes;
+    };
+
+    const parsedAttributes = parseCustomAttributes(customAttributes);
 
     const blockProps = useBlockProps.save({
-        className: `mgb-tag-${tag}`,
-        style: style, // Include styles here
+        className: `hbb-tag-${tag}`,
+        ...predefinedAttributes,
+        ...parsedAttributes,
     });
 
-    // Convert custom attributes string into an object
-    const customAttrsObject = customAttributes
-        .split(/[|,]/)
-        .map((attr) => attr.trim().split("="))
-        .filter(([key, value]) => key && value)
-        .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
-
-    // Merge predefined and custom attributes
-    const finalAttributes = { ...predefinedAttributes, ...customAttrsObject };
-
-    return (
+    return enableInnerBlocks ? (
+        React.createElement(
+            tag,
+            blockProps,
+            <InnerBlocks.Content />
+        )
+    ) : (
         <RichText.Content
-            tagName={tag}
             {...blockProps}
-            {...finalAttributes}
+            tagName={tag}
             value={content}
         />
     );
-};
-
-export default Save;
+}

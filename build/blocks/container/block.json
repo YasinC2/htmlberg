@@ -1,12 +1,21 @@
 {
-  "name": "mgb/container",
+  "name": "hbb/container",
   "title": "Container",
-  "category": "mgb-blocks",
+  "category": "hbb-blocks",
   "icon": "columns",
+  "description": "Container HTML tags like div, section, article, main, etc.",
   "attributes": {
     "tag": {
       "type": "string",
       "default": "div"
+    },
+    "attributes": {
+      "type": "object",
+      "default": {}
+    },
+    "customAttributes": {
+      "type": "string",
+      "default": ""
     }
   },
   "supports": {

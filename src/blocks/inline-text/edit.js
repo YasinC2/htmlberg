@@ -24,13 +24,17 @@ export default function Edit({ attributes, setAttributes }) {
         setAttributes({ attributes: { ...customAttrs, [attr]: value } });
     };
 
+    const blockProps = useBlockProps({
+        className: `hbb-tag-${tag}`,
+    });
+
     return (
         <>
             {/* Sidebar Settings */}
             <InspectorControls>
-                <PanelBody title={__('Text Tag Settings', 'mgb')}>
+                <PanelBody title={__('Inline Text Tag Settings', 'hbb')}>
                     <SelectControl
-                        label={__('Select HTML Tag', 'mgb')}
+                        label={__('Select HTML Tag', 'hbb')}
                         value={tag}
                         options={allowedTags.map((t) => ({
                             label: `<${t}>`,
@@ -43,7 +47,7 @@ export default function Edit({ attributes, setAttributes }) {
                         tagAttributes[tag].map((attr) => (
                             <TextControl
                                 key={attr}
-                                label={__(`${attr} Attribute`, 'mgb')}
+                                label={__(`${attr} Attribute`, 'hbb')}
                                 value={customAttrs[attr] || ''}
                                 onChange={(value) => updateCustomAttribute(attr, value)}
                             />
@@ -51,8 +55,8 @@ export default function Edit({ attributes, setAttributes }) {
 
                     {/* Custom Attributes Field */}
                     <TextControl
-                        label={__('Custom Attributes (comma-separated)', 'mgb')}
-                        help={__('Example: data-id=123, title="My Title"', 'mgb')}
+                        label={__('Custom Attributes (comma-separated)', 'hbb')}
+                        help={__('Example: data-id=123, title="My Title"', 'hbb')}
                         value={customAttributes}
                         onChange={(value) => setAttributes({ customAttributes: value })}
                     />
@@ -61,12 +65,13 @@ export default function Edit({ attributes, setAttributes }) {
 
             {/* Block Editor */}
             <RichText
-                {...useBlockProps()}
+                // {...useBlockProps()}
                 tagName={tag}
                 value={content}
-                allowedFormats={['core/bold', 'core/italic', 'core/link']}
+                allowedFormats={['core/bold', 'core/italic']}
                 onChange={(newContent) => setAttributes({ content: newContent })}
-                placeholder={__('Enter text...', 'mgb')}
+                placeholder={__('Enter text...', 'hbb')}
+                className={`hbb-tag-${tag}`}
             />
         </>
     );

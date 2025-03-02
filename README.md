@@ -1,25 +1,23 @@
-# FlexiSite Blocks
+# HTMLBerg
 
-**FlexiSite Blocks** is a versatile WordPress plugin that enhances the Gutenberg editor with a collection of flexible, powerful blocks designed to simplify website building. Whether you’re creating custom layouts, managing dynamic content, or adding advanced functionality, FlexiSite Blocks has you covered. Built with developers and content creators in mind, this plugin offers a growing suite of tools for any website.
+**HTML Tags as Gutenberg Blocks**
+
+**HTMLBerg** is a WordPress plugin that brings the power of HTML tags to the Gutenberg editor. Create and customize any HTML tag as a block, with full support for WordPress styling options like colors, spacing, and borders. Perfect for developers and content creators who want precise control over their markup within the block editor.
 
 ## Features
 
-- **Universal Tag Block**: Render any HTML tag (e.g., `div`, `span`, `section`) with customizable attributes and WordPress styling support (colors, spacing, borders).  
-- **Future Blocks (Planned)**:  
-  - ACF Pro Repeater Query Loop: Display dynamic content from ACF repeaters with ease.  
-  - Tab Container: Organize multi-section content in interactive tabs.  
-  - More to come—stay tuned!  
-- **Seamless Integration**: Leverages Gutenberg’s native styling options for consistent design in the editor and front-end.  
-- **Extensible**: Modular architecture makes it easy to add new blocks and features.
+- **Universal Tag Block**: Render any HTML tag (e.g., `div`, `span`, `section`) with custom attributes and native Gutenberg styling.  
+- **Lightweight & Focused**: Designed exclusively for HTML tag blocks, keeping it simple and efficient.  
+- **Seamless Styling**: Matches editor and front-end appearances using WordPress’s built-in style supports.
 
 ## Installation
 
 ### Option 1: Download from GitHub
-1. Download the latest release from the [GitHub Releases page](https://github.com/YasinC2/my-gutenberg-blocks/releases) or clone the repository:
+1. Download the latest release from the [GitHub Releases page](https://github.com/YasinC2/htmlberg/releases) or clone the repository:
    ```bash
-   git clone https://github.com/YasinC2/my-gutenberg-blocks
+   git clone https://github.com/YasinC2/htmlberg.git
    ```
-2. Move the `flexisite-blocks` folder to your WordPress plugins directory (`wp-content/plugins/`).
+2. Move the `htmlberg` folder to your WordPress plugins directory (`wp-content/plugins/`).
 3. Activate the plugin via the WordPress admin panel (**Plugins > Installed Plugins**).
 
 ### Option 2: Build from Source
@@ -27,75 +25,62 @@ See the [Building the Plugin](#building-the-plugin) section below to compile the
 
 ## Usage
 
-1. After activation, go to the WordPress block editor (Gutenberg).
-2. Add the **FlexiSite Universal Block** (or other available blocks) from the block inserter.
-3. Customize the block settings in the inspector panel:
-   - **HTML Tag**: Choose the tag to render (e.g., `div`, `span`).
-   - **Attributes**: Add predefined (e.g., `id`, `class`) or custom attributes (e.g., `data-id="123"`).
-   - **Styling**: Use WordPress’s built-in options for colors, spacing, and borders.
-4. Save your page and preview the front-end result.
+1. After activation, open the WordPress block editor (Gutenberg).
+2. Add the **HTMLBerg Universal Block** from the block inserter.
+3. Customize the block in the inspector panel:
+   - **HTML Tag**: Select the tag to render (e.g., `div`, `span`).  
+   - **Attributes**: Add predefined (e.g., `id`, `class`) or custom attributes (e.g., `data-id="123"`).  
+   - **Styling**: Use Gutenberg’s built-in options for colors, spacing, and borders.
+4. Save your page and check the front-end result.
 
 ## Building the Plugin
 
-FlexiSite Blocks uses JavaScript (React) and PHP to deliver its functionality. To build the plugin from source, follow these steps:
+HTMLBerg uses JavaScript (React) and PHP to deliver its functionality. To build it from source, follow these steps:
 
 ### Prerequisites
-- **Node.js** and **npm**: Ensure you have Node.js (version 16+ recommended) and npm installed. [Download here](https://nodejs.org/).
+- **Node.js** and **npm**: Install Node.js (version 16+ recommended) and npm. [Download here](https://nodejs.org/).  
 - **WordPress Environment**: A local or remote WordPress installation for testing.
-- **Composer** (optional): For managing PHP dependencies, if added later.
 
 ### Setup
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/YasinC2/my-gutenberg-blocks
-   cd flexisite-blocks
+   git clone https://github.com/YasinC2/htmlberg.git
+   cd htmlberg
    ```
 
 2. **Install Dependencies**:
-   Run the following command to install JavaScript dependencies (e.g., `@wordpress/scripts`):
+   Run this command to install JavaScript dependencies:
    ```bash
    npm install
    ```
-   If you’ve added a `package.json` file (see below), this will set up the build tools.
 
 
 ### Build Process
 1. **Compile the Blocks**:
-   Use `@wordpress/scripts` to build the JavaScript files:
+   Use `@wordpress/scripts` to build the JavaScript:
    ```bash
    npm run build
    ```
    - This compiles `src/edit.js` and `src/save.js` into a `build/` folder (e.g., `build/index.js`).
 
 2. **Test Locally**:
-   - Move the `flexisite-blocks` folder to your WordPress `wp-content/plugins/` directory.
+   - Move the `htmlberg` folder to your WordPress `wp-content/plugins/` directory.  
    - Activate the plugin and test in the block editor.
 
 
 ## Contributing
 
-We welcome contributions! To get involved:
+Contributions are welcome! To contribute:
 1. Fork the repository.
-2. Create a new branch for your feature or bug fix:
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. Commit your changes and push to your fork.
-4. Open a pull request with a clear description of your changes.
+2. Create a branch for your changes.
+3. Commit and push your changes, then open a pull request.
 
-Please follow WordPress coding standards for PHP and JavaScript.
+Follow WordPress coding standards for PHP and JavaScript.
 
 ## License
 
-This plugin is licensed under the [GPLv2 or later](https://www.gnu.org/licenses/gpl-2.0.html), in line with WordPress.
-
-## Roadmap
-
-- Add ACF Pro Repeater Query Loop block.  
-- Implement Tab Container block for multi-section content.  
-- Expand with more utility blocks based on community feedback.
+Licensed under the [GPLv2 or later](https://www.gnu.org/licenses/gpl-2.0.html), per WordPress guidelines.
 
 ## Support
 
-For issues, feature requests, or questions, please open an [issue on GitHub](https://github.com/YasinC2/my-gutenberg-blocks/issues).
-
+For issues or suggestions, open an [issue on GitHub](https://github.com/YasinC2/htmlberg/issues).

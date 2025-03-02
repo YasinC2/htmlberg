@@ -5,11 +5,11 @@ import Save from './save';
 import { attributes, supports } from "./attributes";
 import './style.css';
 
-registerBlockType("mgb/universal-block", {
-    title: __("Universal Block", "mgb"),
-    category: "mgb-blocks",
+registerBlockType("hbb/universal-block", {
+    title: __("Universal Block", "hbb"),
+    category: "hbb-blocks",
     icon: "admin-generic",
-    "description": "A description of your block.",
+    "description": "All the HTML tags available in HTMLBerg and more, in one block.",
     attributes,
     supports,
     "editorStyle": "file:./editor.css",

@@ -1,7 +1,10 @@
-const allowedTags = ["div", "section", "article", "header", "footer", "aside", "main", "nav", "a", "span", "b", "strong", "i", "em", "u", "sub", "sup"];
+const allowedTags = ["div", "section", "article", "header", "footer", "aside", "main", "nav", "a", 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', "span", "b", "strong", "i", "em", "u", "sub", "sup", "ul", "ol", "li", "blockquote", "figure", "figcaption", "code", "button", "time", "picture", "img", "source", "progress", "meter", "canvas", "form", "input", "textarea", "label", "select", "option", "fieldset", "legend", "table", "th", "tr", "td"];
 
 const tagAttributes = {
     a: ["id", "href", "target", "rel"],
+    img: ['src', 'alt', 'width', 'height'],
+    source: ['src', 'media', 'sizes', 'srcset', 'type'],
+    picture: ['id'],
     div: ["id"],
     section: ["id"],
     article: ["id"],
@@ -17,7 +20,34 @@ const tagAttributes = {
     em: ["id"],
     u: ["id"],
     sub: ["id"],
-    sup: ["id"]
+    sup: ["id"],
+    p: ['id'],
+    h1: ['id'],
+    h2: ['id'],
+    h3: ['id'],
+    h4: ['id'],
+    h5: ['id'],
+    h6: ['id'],
+    ul: ['id'],
+    ol: ['id'],
+    li: ['id'],
+    blockquote: ['id', 'cite'],
+    figcaption: ['id'],
+    figure: ['id'],
+    code: ['id'],
+    time: ['id', 'datetime'],
+    progress: ['id', 'max', 'value'],
+    meter: ['id', "value", "low", "high", "min", 'max'],
+    canvas: ['id', 'height', 'width'],
+    button: ['id', 'name', 'disabled', 'type', 'value'],
+    form: ['id', 'action', 'method'],
+    input: ['id', 'name', 'type', 'value', 'required', 'readonly', 'disabled', 'checked', 'placeholder'],
+    textarea: ['id', 'name', 'cols', 'rows', 'placeholder', 'required', 'readonly', 'disabled'],
+    label: ['id', 'for'],
+    select: ['id', 'name', 'required', 'disabled', 'multiple', 'size'],
+    option: ['id', 'value', 'selected', 'label', 'disabled'],
+    fieldset: ['id', 'name', 'disabled'],
+    legend: ['id', 'height', 'width'],
 };
 
 const attributes = {
@@ -40,7 +70,11 @@ const attributes = {
     "style": {
         "type": "object",
         "default": {}
-    }
+    },
+    enableInnerBlocks: {
+        type: 'boolean',
+        default: false,
+    },
 };
 
 const supports = {
@@ -61,6 +95,7 @@ const supports = {
     "typography": {
         "fontSize": true,
         "lineHeight": true,
+        "textAlign": true,
         "__experimentalFontFamily": true,
         "__experimentalFontWeight": true,
         "__experimentalFontStyle": true,

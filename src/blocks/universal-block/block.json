@@ -1,7 +1,7 @@
 {
-  "name": "mgb/inline-text-tag",
+  "name": "hbb/inline-text-tag",
   "title": "Inline Text Tag",
-  "category": "mgb-blocks",
+  "category": "hbb-blocks",
   "icon": "editor-textcolor",
   "attributes": {
     "tag": {

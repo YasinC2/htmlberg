@@ -1,17 +1,18 @@
 {
-  "name": "hbb/inline-text-tag",
-  "title": "Inline Text Tag",
+  "name": "hbb/block-text-tag",
+  "title": "Block Text",
   "category": "hbb-blocks",
-  "icon": "editor-textcolor",
+  "icon": "editor-bold",
+  "description": "Block text HTML tags like p, h1, h2, etc.",
   "attributes": {
     "tag": {
       "type": "string",
-      "default": "span"
+      "default": "p"
     },
     "content": {
       "type": "string",
       "source": "html",
-      "selector": "span"
+      "selector": "p"
     },
     "attributes": {
       "type": "object",
@@ -40,6 +41,7 @@
     "typography": {
       "fontSize": true,
       "lineHeight": true,
+      "textAlign": true,
       "__experimentalFontFamily": true,
       "__experimentalFontWeight": true,
       "__experimentalFontStyle": true,

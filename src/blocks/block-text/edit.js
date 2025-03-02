@@ -1,32 +1,35 @@
-import { useBlockProps, InnerBlocks, InspectorControls } from '@wordpress/block-editor';
+import { useBlockProps, RichText, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, SelectControl, TextControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
-
-const allowedTags = ['div', 'section', 'article', 'header', 'footer', 'aside', 'main', 'nav', 'a'];
+const allowedTags = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 const tagAttributes = {
-    a: ['id', 'href', 'target', 'rel'],
-    div: ['id'],
-    section: ['id'],
-    article: ['id'],
-    header: ['id'],
-    footer: ['id'],
-    aside: ['id'],
-    main: ['id'],
-    nav: ['id']
+    p: ['id'],
+    h1: ['id'],
+    h2: ['id'],
+    h3: ['id'],
+    h4: ['id'],
+    h5: ['id'],
+    h6: ['id'],
 };
 
-const Edit = ({ attributes, setAttributes }) => {
+export default function Edit({ attributes, setAttributes }) {
     const { tag, content, attributes: customAttrs, customAttributes } = attributes;
-    
+
+    // Update predefined attributes
+    const updateCustomAttribute = (attr, value) => {
+        setAttributes({ attributes: { ...customAttrs, [attr]: value } });
+    };
+
     const blockProps = useBlockProps({
-        className: `hbb-container hbb-tag-${tag}`,
+        className: `hbb-tag-${tag}`,
     });
 
     return (
         <>
+            {/* Sidebar Settings */}
             <InspectorControls>
-                <PanelBody title={__('Container Tag Settings', 'hbb')} initialOpen={true}>
+                <PanelBody title={__('Block Text Tag Settings', 'hbb')}>
                     <SelectControl
                         label={__('Select HTML Tag', 'hbb')}
                         value={tag}
@@ -34,7 +37,7 @@ const Edit = ({ attributes, setAttributes }) => {
                             label: `<${t}>`,
                             value: t,
                         }))}
-                        onChange={(value) => setAttributes({ tag: value, attributes: {} })}
+                        onChange={(newTag) => setAttributes({ tag: newTag, attributes: {} })}
                     />
                     {/* Show attribute fields dynamically */}
                     {tagAttributes[tag] &&
@@ -56,17 +59,16 @@ const Edit = ({ attributes, setAttributes }) => {
                     />
                 </PanelBody>
             </InspectorControls>
-            {/** Render the selected HTML tag dynamically */}
-            {React.createElement(
-                tag,
-                {
-                    // ...blockProps,
-                    className: `hbb-tag-${tag}`,
-                },
-                <InnerBlocks />
-            )}
+
+            {/* Block Editor */}
+            <RichText
+                // {...useBlockProps()}
+                tagName={tag}
+                value={content}
+                onChange={(newContent) => setAttributes({ content: newContent })}
+                placeholder={__('Enter text...', 'hbb')}
+                className={`hbb-tag-${tag}`}
+            />
         </>
     );
-};
-
-export default Edit;
+}
