@@ -42,6 +42,7 @@ export default function Edit({ attributes, setAttributes }) {
                         }))}
                         onChange={(newTag) => setAttributes({ tag: newTag, attributes: {} })}
                     />
+                    
                     {/* Show attribute fields dynamically */}
                     {tagAttributes[tag] &&
                         tagAttributes[tag].map((attr) => (
