@@ -62,6 +62,7 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                         options={tagOptions}
                         onChange={(value) => setAttributes({ tag: value })}
                     />
+
                     {tagAttributes[tag]?.map((attr) => (
                         <TextControl
                             key={attr}
@@ -70,12 +71,14 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                             onChange={(value) => handlePredefinedChange(attr, value)}
                         />
                     ))}
+
                     <TextControl
                         label={__("Custom Attributes (comma-separated)", "hbb")}
                         help={__('Example: data-id=123, title="My Title"', 'hbb')}
                         value={customAttributes}
                         onChange={handleCustomAttributesChange}
                     />
+                    
                     <ToggleControl
                         label={__("Enable InnerBlocks", "hbb")}
                         help={__('Enable this option to allow adding other blocks inside this block.', 'hbb')}
