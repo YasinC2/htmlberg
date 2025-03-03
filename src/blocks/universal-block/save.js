@@ -1,7 +1,7 @@
 import { useBlockProps, RichText, InnerBlocks } from '@wordpress/block-editor';
 
 export default function Save({ attributes }) {
-    const { tag, content, predefinedAttributes, customAttributes, enableInnerBlocks } = attributes;
+    const { tag, content, predefinedAttributes, customAttributes, enableInnerBlocks, value } = attributes;
 
     // Convert customAttributes string into an object
     const parseCustomAttributes = (customAttrString) => {
@@ -30,10 +30,20 @@ export default function Save({ attributes }) {
             <InnerBlocks.Content />
         )
     ) : (
-        <RichText.Content
-            {...blockProps}
-            tagName={tag}
-            value={content}
-        />
+        ['input', 'meter', 'progress', 'option', 'button'].includes(tag) ? (
+            React.createElement(
+                tag,
+                {
+                    ...blockProps,
+                    value: predefinedAttributes.value || '', // Ensure value attribute is set
+                }
+            )
+        ) : (
+            <RichText.Content
+                {...blockProps}
+                tagName={tag}
+                value={content}
+            />
+        )
     );
 }

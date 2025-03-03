@@ -5,7 +5,7 @@ import { useEffect } from "@wordpress/element";
 import { allowedTags, tagAttributes } from "./attributes";
 
 const Edit = ({ attributes, setAttributes, clientId }) => {
-    const { tag, predefinedAttributes, customAttributes, content, enableInnerBlocks } = attributes;
+    const { tag, predefinedAttributes, customAttributes, content, enableInnerBlocks, value } = attributes;
 
     const blockProps = useBlockProps({
         className: `hbb-tag-${tag}`,
@@ -33,6 +33,13 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
             }
         }
     }, [enableInnerBlocks, clientId]);
+
+    // Ensure the value attribute is set correctly for form elements
+    useEffect(() => {
+        if (['input', 'meter', 'progress', 'option', 'button'].includes(tag)) {
+            setAttributes({ value: predefinedAttributes.value || '' });
+        }
+    }, [tag, predefinedAttributes.value]);
 
     return (
         <>
@@ -94,13 +101,24 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     <InnerBlocks />
                 )
             ) : (
-                <RichText
-                    tagName={tag}
-                    value={content}
-                    onChange={(value) => setAttributes({ content: value })}
-                    placeholder={__("Type something...", "hbb")}
-                    className={`hbb-tag-${tag}`}
-                />
+                ['input', 'meter', 'progress', 'option', 'button'].includes(tag) ? (
+                    React.createElement(
+                        tag,
+                        {
+                            ...blockProps,
+                            className: `hbb-tag-${tag}`,
+                            value: predefinedAttributes.value || '', // Ensure value attribute is set
+                        }
+                    )
+                ) : (
+                    <RichText
+                        tagName={tag}
+                        value={content}
+                        onChange={(value) => setAttributes({ content: value })}
+                        placeholder={__("Type something...", "hbb")}
+                        className={`hbb-tag-${tag}`}
+                    />
+                )
             )}
 
         </>
