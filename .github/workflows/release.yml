@@ -27,6 +27,9 @@ jobs:
       - name: Install Dependencies
         run: npm install      # Install npm dependencies
 
+      - name: Build Project
+        run: npm run build    # Run the build script (e.g., to compile assets)
+
       - name: Create a release with a custom name
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
