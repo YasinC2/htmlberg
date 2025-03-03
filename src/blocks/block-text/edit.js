@@ -16,9 +16,20 @@ const tagAttributes = {
 export default function Edit({ attributes, setAttributes }) {
     const { tag, content, attributes: customAttrs, customAttributes } = attributes;
 
-    // Update predefined attributes
+    // Update predefined attributes with sanitization
     const updateCustomAttribute = (attr, value) => {
-        setAttributes({ attributes: { ...customAttrs, [attr]: value } });
+        const sanitizedValue = wp.dom.__unstableStripHTML(value || '');
+        setAttributes({ attributes: { ...customAttrs, [attr]: sanitizedValue } });
+    };
+
+    // Handle custom attributes change (store raw, sanitize on save)
+    const handleCustomAttributesChange = (value) => {
+        setAttributes({ customAttributes: value });
+    };
+
+    // Handle content change (store raw, sanitize on save)
+    const handleContentChange = (value) => {
+        setAttributes({ content: value });
     };
 
     const blockProps = useBlockProps({
@@ -39,6 +50,7 @@ export default function Edit({ attributes, setAttributes }) {
                         }))}
                         onChange={(newTag) => setAttributes({ tag: newTag, attributes: {} })}
                     />
+                    
                     {/* Show attribute fields dynamically */}
                     {tagAttributes[tag] &&
                         tagAttributes[tag].map((attr) => (
@@ -55,17 +67,16 @@ export default function Edit({ attributes, setAttributes }) {
                         label={__('Custom Attributes (comma-separated)', 'hbb')}
                         help={__('Example: data-id=123, title="My Title"', 'hbb')}
                         value={customAttributes}
-                        onChange={(value) => setAttributes({ customAttributes: value })}
+                        onChange={handleCustomAttributesChange}
                     />
                 </PanelBody>
             </InspectorControls>
 
             {/* Block Editor */}
             <RichText
-                // {...useBlockProps()}
                 tagName={tag}
                 value={content}
-                onChange={(newContent) => setAttributes({ content: newContent })}
+                onChange={handleContentChange}
                 placeholder={__('Enter text...', 'hbb')}
                 className={`hbb-tag-${tag}`}
             />

@@ -1,7 +1,6 @@
-import { useBlockProps, InnerBlocks, InspectorControls } from '@wordpress/block-editor';
+import { InnerBlocks, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, SelectControl, TextControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-
 
 const allowedTags = ['div', 'section', 'article', 'header', 'footer', 'aside', 'main', 'nav', 'a'];
 const tagAttributes = {
@@ -18,10 +17,22 @@ const tagAttributes = {
 
 const Edit = ({ attributes, setAttributes }) => {
     const { tag, content, attributes: customAttrs, customAttributes } = attributes;
-    
-    const blockProps = useBlockProps({
-        className: `hbb-container hbb-tag-${tag}`,
-    });
+
+    // Update predefined attributes with sanitization
+    const updateCustomAttribute = (attr, value) => {
+        const sanitizedValue = wp.dom.__unstableStripHTML(value || '');
+        setAttributes({ attributes: { ...customAttrs, [attr]: sanitizedValue } });
+    };
+
+    // Handle custom attributes change (store raw, sanitize on save)
+    const handleCustomAttributesChange = (value) => {
+        setAttributes({ customAttributes: value });
+    };
+
+    // Handle content change (store raw, sanitize on save)
+    const handleContentChange = (value) => {
+        setAttributes({ content: value });
+    };
 
     return (
         <>
@@ -53,17 +64,16 @@ const Edit = ({ attributes, setAttributes }) => {
                         label={__('Custom Attributes (comma-separated)', 'hbb')}
                         help={__('Example: data-id=123, title="My Title"', 'hbb')}
                         value={customAttributes}
-                        onChange={(value) => setAttributes({ customAttributes: value })}
+                        onChange={handleCustomAttributesChange}
                     />
                 </PanelBody>
             </InspectorControls>
 
-            {/** Render the selected HTML tag dynamically */}
+            {/* Render the selected HTML tag dynamically */}
             {React.createElement(
                 tag,
                 {
-                    // ...blockProps,
-                    className: `hbb-tag-${tag}`,
+                    className: `hbb-container hbb-tag-${tag}`,
                 },
                 <InnerBlocks />
             )}

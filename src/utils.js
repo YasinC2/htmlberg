@@ -1,27 +1,30 @@
-export const sanitizeHTML = (input) => {
-    const element = document.createElement('div');
-    element.innerText = input;
-    return element.innerHTML;
+// Handle predefined attribute changes with sanitization
+const handlePredefinedChange = (attr, value) => {
+    const sanitizedValue = wp.dom.__unstableStripHTML(value || '');
+    setAttributes({
+        predefinedAttributes: {
+            ...predefinedAttributes,
+            [attr]: sanitizedValue
+        },
+    });
 };
 
-export const escapeHTML = (input) => {
-    return input.replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+// Handle custom attributes change (store raw, sanitize on save)
+const handleCustomAttributesChange = (value) => {
+    setAttributes({
+        customAttributes: value
+    });
 };
 
-// New function to sanitize input only once per change event
-export const sanitizeOnce = (input) => {
-    const element = document.createElement('div');
-    element.innerText = input;
-    const sanitized = element.innerHTML;
+// Handle content change (store raw, sanitize on save)
+const handleContentChange = (value) => {
+    setAttributes({
+        content: value
+    });
+};
 
-    // Check if the input was already sanitized
-    if (sanitized === input) {
-        return input;
-    }
-
-    return sanitized;
+export {
+    handlePredefinedChange,
+    handleCustomAttributesChange,
+    handleContentChange
 };

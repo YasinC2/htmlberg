@@ -1,11 +1,10 @@
-import { useBlockProps, RichText, InspectorControls } from '@wordpress/block-editor';
+import { RichText, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, SelectControl, TextControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 const allowedTags = ['span', 'b', 'strong', 'i', 'em', 'u', 'a', 'sub', 'sup'];
 const tagAttributes = {
     a: ['id', 'href', 'target', 'rel'],
-    img: ['src', 'alt', 'width', 'height'],
     span: ['id'],
     b: ['id'],
     strong: ['id'],
@@ -19,14 +18,21 @@ const tagAttributes = {
 export default function Edit({ attributes, setAttributes }) {
     const { tag, content, attributes: customAttrs, customAttributes } = attributes;
 
-    // Update predefined attributes
+    // Update predefined attributes with sanitization
     const updateCustomAttribute = (attr, value) => {
-        setAttributes({ attributes: { ...customAttrs, [attr]: value } });
+        const sanitizedValue = wp.dom.__unstableStripHTML(value || '');
+        setAttributes({ attributes: { ...customAttrs, [attr]: sanitizedValue } });
     };
 
-    const blockProps = useBlockProps({
-        className: `hbb-tag-${tag}`,
-    });
+    // Handle custom attributes change (store raw, sanitize on save)
+    const handleCustomAttributesChange = (value) => {
+        setAttributes({ customAttributes: value });
+    };
+
+    // Handle content change (store raw, sanitize on save)
+    const handleContentChange = (value) => {
+        setAttributes({ content: value });
+    };
 
     return (
         <>
@@ -59,18 +65,17 @@ export default function Edit({ attributes, setAttributes }) {
                         label={__('Custom Attributes (comma-separated)', 'hbb')}
                         help={__('Example: data-id=123, title="My Title"', 'hbb')}
                         value={customAttributes}
-                        onChange={(value) => setAttributes({ customAttributes: value })}
+                        onChange={handleCustomAttributesChange}
                     />
                 </PanelBody>
             </InspectorControls>
 
             {/* Block Editor */}
             <RichText
-                // {...useBlockProps()}
                 tagName={tag}
                 value={content}
                 allowedFormats={['core/bold', 'core/italic']}
-                onChange={(newContent) => setAttributes({ content: newContent })}
+                onChange={handleContentChange}
                 placeholder={__('Enter text...', 'hbb')}
                 className={`hbb-tag-${tag}`}
             />

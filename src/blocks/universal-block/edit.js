@@ -1,27 +1,35 @@
 import { __ } from "@wordpress/i18n";
-import { useBlockProps, RichText, InspectorControls, InnerBlocks, BlockControls } from "@wordpress/block-editor";
+import { RichText, InspectorControls, InnerBlocks, BlockControls } from "@wordpress/block-editor";
 import { PanelBody, SelectControl, TextControl, ToggleControl, ToolbarGroup, ToolbarButton } from "@wordpress/components";
 import { useEffect } from "@wordpress/element";
 import { allowedTags, tagAttributes } from "./attributes";
+// import { handlePredefinedChange, handleCustomAttributesChange, handleContentChange } from "../../utils";
 
 const Edit = ({ attributes, setAttributes, clientId }) => {
-    const { tag, predefinedAttributes, customAttributes, content, enableInnerBlocks, value } = attributes;
+    const { tag, predefinedAttributes, customAttributes, content, enableInnerBlocks, value, style = {} } = attributes;
 
-    const blockProps = useBlockProps({
-        className: `hbb-tag-${tag}`,
-    });
-
-    // Convert tag options for dropdown
+    // Convert tag options for dropdown using allowedTags from attributes.js
     const tagOptions = allowedTags.map((t) => ({
         label: `<${t}>`,
         value: t,
     }));
 
-    // Function to handle predefined attribute changes
+    // Handle predefined attribute changes with sanitization
     const handlePredefinedChange = (attr, value) => {
+        const sanitizedValue = wp.dom.__unstableStripHTML(value || '');
         setAttributes({
-            predefinedAttributes: { ...predefinedAttributes, [attr]: value }
+            predefinedAttributes: { ...predefinedAttributes, [attr]: sanitizedValue },
         });
+    };
+
+    // Handle custom attributes change (store raw, sanitize on save)
+    const handleCustomAttributesChange = (value) => {
+        setAttributes({ customAttributes: value });
+    };
+
+    // Handle content change (store raw, sanitize on save)
+    const handleContentChange = (value) => {
+        setAttributes({ content: value });
     };
 
     // Clear inner blocks when enableInnerBlocks is toggled off
@@ -34,10 +42,13 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         }
     }, [enableInnerBlocks, clientId]);
 
-    // Ensure the value attribute is set correctly for form elements
+    // Ensure the value attribute is set for form elements
     useEffect(() => {
         if (['input', 'meter', 'progress', 'option', 'button'].includes(tag)) {
-            setAttributes({ value: predefinedAttributes.value || '' });
+            const sanitizedValue = wp.dom.__unstableStripHTML(predefinedAttributes.value || '');
+            setAttributes({ value: sanitizedValue });
+        } else {
+            setAttributes({ value: '' }); // Clear value for non-form tags
         }
     }, [tag, predefinedAttributes.value]);
 
@@ -45,34 +56,26 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
         <>
             <InspectorControls>
                 <PanelBody title={__("Block Settings", "hbb")}>
-                    {/* Tag Selection */}
                     <SelectControl
                         label={__("HTML Tag", "hbb")}
                         value={tag}
                         options={tagOptions}
                         onChange={(value) => setAttributes({ tag: value })}
                     />
-
-                    {/* Predefined Attributes Inputs */}
                     {tagAttributes[tag]?.map((attr) => (
                         <TextControl
                             key={attr}
                             label={__(`${attr} Attribute`, 'hbb')}
-                            // label={attr.charAt(0).toUpperCase() + attr.slice(1)}
                             value={predefinedAttributes[attr] || ""}
                             onChange={(value) => handlePredefinedChange(attr, value)}
                         />
                     ))}
-
-                    {/* Custom Attributes */}
                     <TextControl
                         label={__("Custom Attributes (comma-separated)", "hbb")}
                         help={__('Example: data-id=123, title="My Title"', 'hbb')}
                         value={customAttributes}
-                        onChange={(value) => setAttributes({ customAttributes: value })}
+                        onChange={handleCustomAttributesChange}
                     />
-                    
-                    {/* Toggle InnerBlocks */}
                     <ToggleControl
                         label={__("Enable InnerBlocks", "hbb")}
                         help={__('Enable this option to allow adding other blocks inside this block.', 'hbb')}
@@ -82,7 +85,6 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 </PanelBody>
             </InspectorControls>
 
-            
             <BlockControls>
                 <ToolbarGroup>
                     <ToolbarButton>
@@ -95,7 +97,6 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                 React.createElement(
                     tag,
                     {
-                        // ...blockProps,
                         className: `hbb-tag-${tag}`,
                     },
                     <InnerBlocks />
@@ -105,22 +106,21 @@ const Edit = ({ attributes, setAttributes, clientId }) => {
                     React.createElement(
                         tag,
                         {
-                            ...blockProps,
                             className: `hbb-tag-${tag}`,
-                            value: predefinedAttributes.value || '', // Ensure value attribute is set
+                            value: predefinedAttributes.value || '',
                         }
                     )
                 ) : (
                     <RichText
                         tagName={tag}
                         value={content}
-                        onChange={(value) => setAttributes({ content: value })}
+                        onChange={handleContentChange}
                         placeholder={__("Type something...", "hbb")}
                         className={`hbb-tag-${tag}`}
+                        style={style}
                     />
                 )
             )}
-
         </>
     );
 };
