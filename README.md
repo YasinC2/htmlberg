@@ -33,6 +33,9 @@ See the [Building the Plugin](#building-the-plugin) section below to compile the
    - **Styling**: Use Gutenberg’s built-in options for colors, spacing, and borders.
 4. Save your page and check the front-end result.
 
+## Security and Risks
+HTMLBerg offers powerful flexibility, including support for form elements and custom attributes, but this comes with security responsibilities. We’ve implemented sanitization (e.g., `wp.dom.safeHTML`, `__unstableStripHTML`) to mitigate risks like XSS, but improper use—especially with functional forms—could expose vulnerabilities (e.g., CSRF, phishing). For a detailed breakdown of risks, safe usage guidelines, and form element considerations, see our [Full Documentation](https://github.com/YasinC2/htmlberg/wiki).
+
 ## Building the Plugin
 
 HTMLBerg uses JavaScript (React) and PHP to deliver its functionality. To build it from source, follow these steps:
